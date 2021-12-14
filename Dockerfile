@@ -12,7 +12,9 @@ WORKDIR /mcserver
 COPY    tmux.conf /root/.tmux.conf
 COPY    run.sh    /run.sh
 
-RUN     apk add --update --no-cache openjdk8-jre openjdk11-jre openjdk16-jre openjdk17-jre tmux
+RUN     apk add --update --no-cache openjdk8-jre openjdk11-jre openjdk16-jre openjdk17-jre tmux && \
+        adduser minecraft -u 1000 --disabled-password --no-create-home --home "$(pwd)" && \
+        chown minecraft: /mcserver
 
-CMD     sh /run.sh $jarname $ram $javaVersion $enableCommandOnShutdown $commandOnShutdown
+CMD     su - minecraft -c "sh /run.sh $jarname $ram $javaVersion $enableCommandOnShutdown $commandOnShutdown"
 
